@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+
+<html>
+    <head><title>상명대 도서관 검색</title></head>
+    <body>
+        <h3>도서 검색</h3>
+        <form method="get" action ="https://lib.smu.ac.kr/Search/">
+            <select type="hidden" name ="campuscode" value="01">
+                <option value="00">서울캠퍼스</option>
+                <option value="01">천안캠퍼스</option>
+            </select>
+            <select name = "rt" size ="1">
+                <option value="MM">단행본</option>
+                <option value="EB">전자책</option>
+                <option value="SS">연속간행물</option>
+            </select>
+            <input type ="text" name = "q"/>
+            <input type = "submit" value="검색"/>
+            <input type = "reset" value="취소"/>
+            <hr/>
+        </form>
+    </body>
+</html>
