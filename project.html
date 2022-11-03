@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>상명대학교 학점계산기</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com/%22%3E">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+    <script src="data3.js" type="text/javascript"></script>
+    <style type="text/css">
+        body {
+            font-family: 'Jua', sans-serif;
+        }
+
+        ul {
+            list-style: none;
+            display: flex;
+            font-size: 40pt;
+        }
+
+        li {
+            margin-left: 160px;
+            margin-top: 10px;
+        }
+
+        .nav:hover {
+            color: whitesmoke;
+            opacity: 0.7;
+        }
+
+        .navi_a {
+            width: 1600px;
+            height: 80px;
+            background-color: rgb(0 61 145);
+            color: white;
+            margin: 0 auto;
+        }
+
+        .ico_mark1 {
+            background-image: url(상명대3.png);
+            display: inline-block;
+            height: 60px;
+            width: 200px;
+            background-position: 0px -10px;
+            background-repeat: no-repeat;
+            background-size: 200px;
+            vertical-align: top;
+        }
+
+        .ico_mark2 {
+            background-image: url(샘물);
+            display: inline-block;
+            height: 100px;
+            width: 200px;
+            background-position: 0px 9px;
+            background-repeat: no-repeat;
+            background-size: 100%;
+            vertical-align: top;
+        }
+
+        .HOME {
+            padding-left: 0px;
+            margin-top: 0px;
+        }
+
+        .nav {
+            width: 300px;
+        }
+
+        .fieldset {
+            width: 1600px;
+            margin: 0 auto;
+            font-size: 20pt;
+        }
+
+        fieldset {
+            border-radius: 6px;
+            border: solid 3px;
+        }
+
+        select {
+            margin-right: 40px;
+        }
+
+        .fieldset2 {
+            width: 365px;
+            height: 500px;
+            overflow-y: scroll;
+        }
+
+        .gradeset {
+            position: relative;
+            margin: 0 auto;
+            width: 1600px;
+            height: 525.5px;
+        }
+
+        .gradeset2 {
+            position: absolute;
+            font-size: 15pt;
+            margin: 0;
+        }
+
+        .table_res td {
+            padding:15px 0;
+            border: 2px solid black;
+        }
+
+        .table_res {
+            margin: 0 auto;
+            width: 1200px;
+            font-size: 30px;
+            border: 2px solid black;
+        }
+
+        .result {
+            visibility: hidden;
+            margin-top: 10px;
+        }
+
+        .result_show {
+            visibility: visible;
+            margin-top: 10px;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="navi_a">
+        <ul class="HOME">
+            <li class="nav_item">
+                <a class="ico_mark1" href="https://www.smu.ac.kr/ko/index.do"></a>
+            </li>
+            <li class="nav_item">
+                <a class="nav">
+                    학점계산기
+                </a>
+            </li>
+            <li class="nav_item">
+                <a class="nav">
+                    이용법
+                </a>
+            </li>
+            <li class="nav_item">
+                <a class="ico_mark2" href="https://portal.smu.ac.kr/p/S00/"></a>
+            </li>
+        </ul>
+        <div><i class="logo"></i></div>
+    </div>
+    <div class="fieldset">
+        <fieldset>
+            <legend>정보 입력</legend>
+            <label for="univ">단과대학선택 :</label>
+            <select id="univ" size="1" onchange="major(this)">
+                <option selected disabled>---단과대 선택---</option>
+                <option value="인문">글로벌인문학부대학</option>
+                <option value="예술">디자인대학</option>
+                <option value="예술">예술대학</option>
+                <option value="자연">융합기술대학</option>
+                <option value="공학">공과대학</option>
+            </select>
+            <label for="ID">학번 : </label>
+            <select id="ID" size="1" onchange="num(this)">
+                <option selected disabled>---학번 선택---</option>
+                <option value="18">18학번</option>
+                <option value="19">19학번</option>
+                <option value="20">20학번</option>
+                <option value="21">21학번</option>
+                <option value="22">22학번</option>
+            </select>
+            <label for="grade">전공학점 입력 :</label>
+            <input type="text" id="grade" placeholder="ex) 55">
+            <input type="button" onclick=show_result() value="결과확인">
+        </fieldset>
+    </div>
+    <div class="gradeset">
+        <div class="gradeset2" style="left: 0px;">
+            <fieldset class="fieldset2">
+                <legend>기초교양</legend>
+                <form id="basic"></form>
+            </fieldset>
+        </div>
+        <div class="gradeset2" style="left: 399px;">
+            <fieldset class="fieldset2">
+                <legend>핵심교양</legend>
+                <form id="core"></form>
+            </fieldset>
+        </div>
+        <div class="gradeset2" style="left: 798px;">
+            <fieldset class="fieldset2">
+                <legend>균형교양</legend>
+                <form id="balance"></form>
+            </fieldset>
+        </div>
+        <div class="gradeset2" style="left: 1197px;">
+            <fieldset class="fieldset2">
+                <legend>일반교양</legend>
+                <form id="normal"></form>
+            </fieldset>
+        </div>
+    </div>
+
+    <!-- 결과 출력하는 곳 클래스 visibility 설정 온클릭하면 show로 변경하게 만들기-->
+    <div class="result" id="display">
+        <table class="table_res" id="tableid">
+         <tr> 
+             <td>기초교양</td>
+             <td> </td>
+             <td> </td>
+             <td></td>
+         </tr>
+    
+         <tr>
+             <td rowspan="2">핵심교양</td>
+             <td>다양성존중역량, 윤리실천역량</td>
+             <td></td>
+             <td></td>
+         </tr>
+    
+         <tr>
+             <td>융복합역량, 창의적문제해결역량</td>
+             <td></td>
+             <td></td>
+         </tr>
+    
+         <tr>
+             <td rowspan="5">균형교양</td>
+             <td>인문</td>
+             <td> </td>
+             <td rowspan="5"> </td>
+         </tr>
+         <tr>
+            <td>사회</td>
+            <td> </td>
+        </tr>
+        <tr>
+            <td>자연</td>
+            <td> </td>
+        </tr>
+        <tr>
+            <td>공학</td>
+            <td> </td>
+        </tr>
+        <tr>
+            <td>예술</td>
+            <td> </td>
+        </tr>
+    
+         <tr>
+             <td>일반교양</td>
+             <td> </td>
+             <td> </td>
+             <td></td>
+         </tr>
+
+         <tr>
+            <td>총 이수학점</td>
+            <td> </td>
+            <td> </td>
+            <td> </td>
+        </tr>
+        </table>
+     </div>
+
+</body>
+
+<script type="text/javascript">
+    let jsonData1 = JSON.parse(JSON.stringify(data3));
+
+    var major1; // 단과대
+    var num1; // 학번
+    var mg = document.getElementById('grade'); // 전공학점
+
+    function major(target) { // 단과대 값
+        major1 = target.value;
+    }
+
+    function num(target) { // 학번 값
+        num1 = target.value;
+    }
+
+
+    for (var i = 0; i < data3.length; i++) {
+
+        if (jsonData1[i].영역 == "기초") {
+            document.getElementById('basic').innerHTML += "<input type='checkbox' value='' id = " + i + " onclick = cal(" + i + ")>" + jsonData1[i].교과목명 + "<br/></input>";
+        }
+
+        else if (jsonData1[i].영역 == "핵심") {
+            document.getElementById('core').innerHTML += "<input type='checkbox' value='' id = " + i + " onclick = cal(" + i + ")>" + jsonData1[i].교과목명 + "<br/></input>";
+        }
+
+        else if (jsonData1[i].영역 == "균형") {
+            document.getElementById('balance').innerHTML += "<input type='checkbox' value='' id = " + i + " onclick = cal(" + i + ")>" + jsonData1[i].교과목명 + "<br/></input>";
+        }
+
+        else if (jsonData1[i].영역 == "") {
+            document.getElementById('normal').innerHTML += "<input type='checkbox' value='' id = " + i + " onclick = cal(" + i + ")>" + jsonData1[i].교과목명 + "<br/></input>";
+        }
+    }
+    var res = 0; // 총 학점
+    var basic = 0; // 기초
+    var std = 0; // 일반
+    var core = 0;      // 핵심
+    var balance = 0;   // 균형
+    var human = 0;     // 인문
+    var society = 0;   // 사회
+    var nature = 0;    // 자연
+    var engineering = 0;  // 공학
+    var art = 0;       // 예술
+    var dy = 0; // 다양성존중역량 윤리실천역량 -> 2
+    var yc = 0; // 융복합역량 창의적문제해결역량 -> 2 
+
+    var arrBalance = [];
+    var balancetotal = 0;
+    for(var i = 0; i < 5; i++){
+        arrBalance[i] = 0;                         //인문, 사회, 자연, 공학, 예술
+    }
+
+    function cal(i) {
+        const is_checked = document.getElementById(i).checked; // 체크박스 체크 확인 변수
+
+        if (is_checked == true) { // 체크하면
+            res += jsonData1[i].학점;
+
+            if (jsonData1[i].영역 == "기초") basic += jsonData1[i].학점;
+
+            else if (jsonData1[i].영역 == "") std += jsonData1[i].학점;
+
+            else if (jsonData1[i].영역 == "핵심") {
+                if (jsonData1[i].분야 == "다양성존중역량" || jsonData1[i].분야 == "윤리실천역량") {
+                    dy += jsonData1[i].학점;
+                    core += jsonData1[i].학점;
+                }
+
+                else if (jsonData1[i].분야 == "융복합역량" || jsonData1[i].분야 == "창의적문제해결역량") {
+                    yc += jsonData1[i].학점;
+                    core += jsonData1[i].학점;
+                }
+            }
+
+            else if (jsonData1[i].영역 == "균형") {
+                if (jsonData1[i].분야 == major1) std += jsonData1[i].학점; //분야 : 인문, 사회, 자연, 공학, 예술
+
+                else {
+                    if(jsonData1[i].분야 == "인문"){
+                        human += jsonData1[i].학점;
+                        balance += jsonData1[i].학점;
+                        if(arrBalance[0]++ == 0){
+                            balancetotal += arrBalance[0];
+                        }
+                    }
+                    else if(jsonData1[i].분야 == "사회"){
+                        society += jsonData1[i].학점;
+                        balance += jsonData1[i].학점;
+                        if(arrBalance[1]++ == 0){
+                            balancetotal += arrBalance[1];
+                        }
+                    }
+                    else if(jsonData1[i].분야 == "자연"){
+                        nature += jsonData1[i].학점;
+                        balance += jsonData1[i].학점;
+                        if(arrBalance[2]++ == 0){
+                            balancetotal += arrBalance[2];
+                        }
+                    }
+                    else if(jsonData1[i].분야 == "공학"){
+                        engineering += jsonData1[i].학점;
+                        balance += jsonData1[i].학점;
+                        if(arrBalance[3]++ == 0){
+                            balancetotal += arrBalance[3];
+                            alert(arrBalance[3], balancetotal);
+                        }
+                    }
+                    else if(jsonData1[i].분야 == "예술"){
+                        art += jsonData1[i].학점;
+                        balance += jsonData1[i].학점;
+                        if(arrBalance[4]++ == 0){
+                            balancetotal += arrBalance[4];
+                        }
+                    }
+                }
+            }
+        }
+
+        else { // 체크 풀면
+            res -= jsonData1[i].학점;
+
+            if (jsonData1[i].영역 == "기초") basic -= jsonData1[i].학점;
+
+            else if (jsonData1[i].영역 == "") std -= jsonData1[i].학점;
+
+            else if (jsonData1[i].영역 == "핵심") {
+                if (jsonData1[i].분야 == "다양성존중역량" || jsonData1[i].분야 == "윤리실천역량") {
+                    dy -= jsonData1[i].학점;
+                    core -= jsonData1[i].학점;
+                }
+
+                else if (jsonData1[i].분야 == "융복합역량" || jsonData1[i].분야 == "창의적문제해결역량") {
+                    yc -= jsonData1[i].학점;
+                    core -= jsonData1[i].학점;
+                }
+            }
+
+            else if (jsonData1[i].영역 == "균형") {
+                if (jsonData1[i].분야 == major1) std -= jsonData1[i].학점;          //분야 : 인문, 사회, 자연, 공학, 예술
+
+                else {
+                    if(jsonData1[i].분야 == "인문"){
+                        human -= jsonData1[i].학점;
+                        balance -= jsonData1[i].학점;
+                        if(arrBalance[0] == 1){
+                            balancetotal -= arrBalance[0]--;
+                        }
+                        else if(arrBalance[0] > 1) {
+                            arrBalance[0]--;
+                        }
+                    }
+                    else if(jsonData1[i].분야 == "사회"){
+                        society -= jsonData1[i].학점;
+                        balance -= jsonData1[i].학점;
+                        if(arrBalance[1] == 1){
+                            balancetotal -= arrBalance[1]--;
+                        }
+                        else if(arrBalance[1] > 1) {
+                            arrBalance[1]--;
+                        }
+                    }
+                    else if(jsonData1[i].분야 == "자연"){
+                        nature -= jsonData1[i].학점;
+                        balance -= jsonData1[i].학점;
+                        if(arrBalance[2] == 1){
+                            balancetotal -= arrBalance[2]--;
+                        }
+                        else if(arrBalance[2] > 1) {
+                            arrBalance[2]--;
+                        }
+                    }
+                    else if(jsonData1[i].분야 == "공학"){
+                        engineering -= jsonData1[i].학점;
+                        balance -= jsonData1[i].학점;
+                        if(arrBalance[3] == 1){
+                            balancetotal -= arrBalance[3]--;
+                        }
+                        else if(arrBalance[3] > 1) {
+                            arrBalance[3]--;
+                        }
+                    }
+                    else if(jsonData1[i].분야 == "예술"){
+                        art -= jsonData1[i].학점;
+                        balance -= jsonData1[i].학점;
+                        if(arrBalance[4] == 1){
+                            balancetotal -= arrBalance[4]--;
+                        }
+                        else if(arrBalance[4] > 1) {
+                            arrBalance[4]--;
+                        }
+                    }
+                }
+            }
+        }
+
+        alert("총학점: " + res + " 기초: " + basic + " 일반:" + std + " 핵심:" + core + " 균형:" + balance + " 다양성, 윤리:" + dy + "융복합, 창의:" + yc);
+    }
+
+    var pass = 0;
+    function show_result(){
+        // 학점
+        document.getElementById("display").classList.replace('result', 'result_show')
+        var total = Number(mg.value) + res;
+        document.getElementById("tableid").getElementsByTagName("tr")[0].getElementsByTagName("td")[2].innerHTML = basic; // 기초
+        document.getElementById("tableid").getElementsByTagName("tr")[1].getElementsByTagName("td")[2].innerHTML = dy; // 다양성, 윤리
+        document.getElementById("tableid").getElementsByTagName("tr")[2].getElementsByTagName("td")[1].innerHTML = yc; // 융복합, 창의
+        document.getElementById("tableid").getElementsByTagName("tr")[3].getElementsByTagName("td")[2].innerHTML = human; // 인문
+        document.getElementById("tableid").getElementsByTagName("tr")[4].getElementsByTagName("td")[1].innerHTML = society; // 사회
+        document.getElementById("tableid").getElementsByTagName("tr")[5].getElementsByTagName("td")[1].innerHTML = nature; // 자연
+        document.getElementById("tableid").getElementsByTagName("tr")[6].getElementsByTagName("td")[1].innerHTML = engineering; // 공학
+        document.getElementById("tableid").getElementsByTagName("tr")[7].getElementsByTagName("td")[1].innerHTML = art; // 예술
+        document.getElementById("tableid").getElementsByTagName("tr")[8].getElementsByTagName("td")[2].innerHTML = std; // 일반
+        document.getElementById("tableid").getElementsByTagName("tr")[9].getElementsByTagName("td")[2].innerHTML = total; // 총 학점
+
+        if(total >= 130) document.getElementById("tableid").getElementsByTagName("tr")[9].getElementsByTagName("td")[3].innerHTML = "<span style='color: blue'>만족</span>";
+        else document.getElementById("tableid").getElementsByTagName("tr")[9].getElementsByTagName("td")[3].innerHTML = "<span style='color: red'>불만족</span>";
+
+        if(basic >= 11) document.getElementById("tableid").getElementsByTagName("tr")[0].getElementsByTagName("td")[3].innerHTML = "<span style='color: blue'>만족</span>";
+        else document.getElementById("tableid").getElementsByTagName("tr")[0].getElementsByTagName("td")[3].innerHTML = "<span style='color: red'>불만족</span>";
+
+        if(dy >= 2) document.getElementById("tableid").getElementsByTagName("tr")[1].getElementsByTagName("td")[3].innerHTML = "<span style='color: blue'>만족</span>";
+        else document.getElementById("tableid").getElementsByTagName("tr")[1].getElementsByTagName("td")[3].innerHTML = "<span style='color: red'>불만족</span>";
+
+        if(yc >= 2) document.getElementById("tableid").getElementsByTagName("tr")[2].getElementsByTagName("td")[2].innerHTML = "<span style='color: blue'>만족</span>";
+        else document.getElementById("tableid").getElementsByTagName("tr")[2].getElementsByTagName("td")[2].innerHTML = "<span style='color: red'>불만족</span>";
+
+        if(balance >= 9 && balancetotal >= 3){
+            document.getElementById("tableid").getElementsByTagName("tr")[3].getElementsByTagName("td")[3].innerHTML = "<span style='color: blue'>만족</span>";
+        } 
+        else document.getElementById("tableid").getElementsByTagName("tr")[3].getElementsByTagName("td")[3].innerHTML = "<span style='color: red'>불만족</span>";
+    }
+
+</script>
+
+</html>
